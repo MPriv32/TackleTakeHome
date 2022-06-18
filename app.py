@@ -6,20 +6,11 @@ if os.path.isfile('.env'):
     from dotenv import load_dotenv
     load_dotenv()
 
-#Github repo name
-repo_name = "MPriv32/fleetwood-k8s-project"
+repo_lists = ["MPriv32/fleetwood-k8s-project", "MPriv32/TackleTakeHome"]
 
-#Authentication with a personal access token
 access_token = os.getenv("ACCESS_TOKEN")
 g = Github(access_token)
 
-#Assign repo name to a value
-repo = g.get_repo(repo_name)
-
-#Assign head branch to a value
-branch = repo.get_branch("main")
-
-#Specifies whether merge commits, squash merging and rebase & merge are allowed
 def repo_merge_strategies(repo):
     #Check if merge commits are allowed
     if repo.allow_merge_commit == True:
@@ -39,9 +30,11 @@ def repo_merge_strategies(repo):
     else:
         print("Rebase and merge isn't allowed.")
 
-#Specifies if the head branch is set to auto delete after pull requests are merged
 def auto_delete_enabled(branch):
     print(branch.protected)
         
-repo_merge_strategies(repo)
-auto_delete_enabled(branch)
+for repo in repo_lists:
+    repo = g.get_repo(repo)
+    branch = repo.get_branch("main")
+    repo_merge_strategies(repo)
+    auto_delete_enabled(branch)

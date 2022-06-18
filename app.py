@@ -1,7 +1,6 @@
 from github import Github
 import os
 import boto3
-import json
 
 #Specify .env folder to store credentials
 if os.path.isfile('.env'):
@@ -9,12 +8,14 @@ if os.path.isfile('.env'):
     load_dotenv()
 
 #Authorization for DynamoDB
-access_key = os.getenv('AWS_ACCESS_KEY')
-secret_key = os.getenv('AWS_SECRET_KEY')
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
+REGION = os.getenv('REGION')
+TABLE_NAME = os.getenv('TABLE_NAME')
 
 #DynamoDB table that contains the repo list
-dynamodb = boto3.resource('dynamodb', region_name='us-west-2', aws_access_key_id=access_key, aws_secret_access_key=secret_key)
-table = dynamodb.Table('TackleTakeHome')
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table(TABLE_NAME)
 
 # Scans repo names from DB and return a list of repos
 response = table.scan()
@@ -23,7 +24,7 @@ repo_list = [x.get("repo") for x in data]
 
 
 #Authorization to access repo data
-access_token = os.getenv("ACCESS_TOKEN")
+access_token = os.getenv("GITHUB_ACCESS_TOKEN")
 g = Github(access_token)
 
 #Specifies whether merge commits, squash merging and rebase & merge are allowed
@@ -48,11 +49,17 @@ def repo_merge_strategies(repo):
 
 #Specifies if the head branch is set to auto delete after pull requests are merged
 def auto_delete_enabled(branch):
-    print(branch.protected)
+    if branch.protected == True:
+        print("Auto delete head branch is disabled!")
+    else:
+        print("Auto delete head branch is enabled.")    
+    
         
+   
+ 
 #Loop through list of repos
 for repo in repo_list:
     repo = g.get_repo(repo)
     branch = repo.get_branch("main")
     repo_merge_strategies(repo)
-    auto_delete_enabled(branch)
+    auto_delete_enabled(branch)       

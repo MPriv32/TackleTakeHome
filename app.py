@@ -1,5 +1,6 @@
 from github import Github
 import os
+import botocore
 import boto3
 import json
 
@@ -19,9 +20,13 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(TABLE_NAME)
 
 # Scans repo names from DB and return a list of repos
-response = table.scan()
-data = response['Items']
-repo_list = [x.get("repo") for x in data]
+try: 
+    response = table.scan()
+    data = response['Items']
+except botocore.exceptions.ClientError as error:
+    print(error)
+finally:
+    repo_list = [x.get("repo") for x in data]
 
 
 #Authorization to access repo data

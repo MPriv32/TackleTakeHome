@@ -1,0 +1,38 @@
+[
+    {
+        "Merge Commits": true
+    },
+    {
+        "Squash Merging": true
+    },
+    {
+        "Rebase and Merging": true
+    },
+    {
+        "Head Delete Protection": false
+    },
+    {
+        "Merge Commits": false
+    },
+    {
+        "Squash Merging": true
+    },
+    {
+        "Rebase and Merging": false
+    },
+    {
+        "Head Delete Protection": false
+    },
+    {
+        "Merge Commits": true
+    },
+    {
+        "Squash Merging": true
+    },
+    {
+        "Rebase and Merging": true
+    },
+    {
+        "Head Delete Protection": false
+    }
+]

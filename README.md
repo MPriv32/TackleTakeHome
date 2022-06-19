@@ -60,7 +60,7 @@ REGION = "<insert region>"
 TABLE_NAME = "<insert table name>"
 ```
 
-Back to our application in ```app.py``` we need to assign a value to ```boto3.resource('dynamodb')``` and assign another value to the DynamoDB table we'll be using. After this, we'll run a table scan to return every item in the table, which in our case, is a list of repository names. This will return a list of key-value pairs. In python, we can use the ```get()``` function and specifiy the key- it will return the value and then we'll create a new list of just the values (repository names). Here's what that code looks like
+Back to our application in ```app.py``` we need to assign a value to ```boto3.resource('dynamodb')``` and assign another value to the DynamoDB table we'll be using. After this, we'll run a table scan to return every item in the table, which in our case, is a list of repository names. This will return a list of key-value pairs. In python, we can use the ```get()``` function and specifiy the key- it will return the value and then we'll create a new list of just the values (repository names). We'll also implement a **try** and **except** statement to handle any errors when scanning the table- also making it easier to read the error, too. Here's what that code looks like
 
 ```
 dynamodb = boto3.resource('dynamodb')

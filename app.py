@@ -1,6 +1,7 @@
 from github import Github
 import os
 import boto3
+import json
 
 #Specify .env folder to store credentials
 if os.path.isfile('.env'):
@@ -27,39 +28,32 @@ repo_list = [x.get("repo") for x in data]
 access_token = os.getenv("GITHUB_ACCESS_TOKEN")
 g = Github(access_token)
 
+list = []
+
 #Specifies whether merge commits, squash merging and rebase & merge are allowed
 def repo_merge_strategies(repo):
     #Check if merge commits are allowed
-    if repo.allow_merge_commit == True:
-        print("Merge commits are allowed!")
-    else:
-        print("Merge commits aren't allowed.")
+    list.append({'Merge Commits': repo.allow_merge_commit})
 
     #Check if squash merging is allowed
-    if repo.allow_squash_merge == True:
-        print("Squash merging is allowed!")
-    else:
-        print("Squash merging isn't allowed.")
+    list.append({'Squash Merging': repo.allow_squash_merge})
 
     #Check if rebase and merging is allowed
-    if repo.allow_rebase_merge == True:
-        print("Rebase and merge is allowed!")
-    else:
-        print("Rebase and merge isn't allowed.")
+    list.append({'Rebase and Merging': repo.allow_rebase_merge})
 
 #Specifies if the head branch is set to auto delete after pull requests are merged
 def auto_delete_enabled(branch):
-    if branch.protected == True:
-        print("Auto delete head branch is disabled!")
-    else:
-        print("Auto delete head branch is enabled.")    
-    
-        
-   
- 
+    list.append({'Head Delete Protection': branch.protected})
+
 #Loop through list of repos
 for repo in repo_list:
     repo = g.get_repo(repo)
     branch = repo.get_branch("main")
     repo_merge_strategies(repo)
-    auto_delete_enabled(branch)       
+    auto_delete_enabled(branch)
+
+#Export results as json data to repos.json
+jsonData = json.dumps(list)
+with open('repos.json', 'w', newline='') as outfile:
+    outfile.write(jsonData)
+print(jsonData)

@@ -33,9 +33,6 @@ Given a list of GitHub repos, audit the repos for the following:
 # Results
 Export the results as a JSON object.
 
-# Delivery
-Provide zipped git repo via email. Please include the .git directory. Make meaningful commits along the way so we can see how you break up your work.
-
 # Tackle Take Home Project
 
 ## Outline
